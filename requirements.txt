@@ -1,0 +1,12 @@
+click==8.0.3
+filelock==3.4.2
+Flask==2.0.2
+Flask-API==3.0.post1
+Flask-Cors==3.0.10
+itsdangerous==2.0.1
+Jinja2==3.0.3
+MarkupSafe==2.0.1
+pycodestyle==2.8.0
+pyflakes==2.4.0
+six==1.16.0
+Werkzeug==2.0.3
