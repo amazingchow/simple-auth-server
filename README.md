@@ -51,6 +51,8 @@ ELSE
 #### Setup
 
 ```shell
+pip install -r requirements.txt
+
 # for debug/dev
 make run_server_local
 
