@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath("../concurrency_safe_shelve"))
 sys.path.append(os.path.abspath("../utils"))
 
 from . import auth_server_blueprint
+from .constant import _access_token
 from .constant import _auth_code_db_name
 from concurrency_safe_shelve import open_thread_safe_shelf
 from flask import current_app
@@ -18,6 +19,13 @@ from utils import gen_auth_code_hash
 # 验证激活码接口
 @auth_server_blueprint.route("/api/v1/authcode/verify", methods=["GET", "HEAD"])
 def verify_auth_code():
+    access_token = request.headers.get("x-auth-token", "")
+    if len(access_token) != 10 or access_token != _access_token:
+        return Response(
+            "Invalid x-auth-token",
+            status=StatusCode.HTTP_401_UNAUTHORIZED,
+        )
+
     auth_code = request.args.get("authcode", "")
     if len(auth_code) != 6:
         current_app.logger.error("invalid auth_code: {}".format(auth_code))

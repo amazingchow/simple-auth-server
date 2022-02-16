@@ -32,10 +32,10 @@ make run_serverd
 1. generate a new auth code
 
 ```shell
-curl -X POST -H 'content-type: application/json' -d '{"user_email": "abc@xyz.com", "expired_date": "2022-02-25"}' "http://127.0.0.1:15555/api/v1/authcode"
+curl -i -X POST -H 'x-auth-token: xxx' -H 'content-type: application/json' -d '{"user_email": "abc@xyz.com", "expired_date": "2022-02-25"}' "http://127.0.0.1:15555/api/v1/authcode"
 
 {
-  "auth_code": "127803", 
+  "auth_code": "818361", 
   "expired_date": "2022-02-25", 
   "user_email": "abc@xyz.com"
 }
@@ -44,19 +44,19 @@ curl -X POST -H 'content-type: application/json' -d '{"user_email": "abc@xyz.com
 2. verify the auth code
 
 ```shell
-curl -I "http://127.0.0.1:15555/api/v1/authcode/verify?authcode=127803"
+curl -i -H 'x-auth-token: xxx' "http://127.0.0.1:15555/api/v1/authcode/verify?authcode=818361"
 ```
 
 3. delete the auth code
 
 ```shell
-curl -X DELETE "http://127.0.0.1:15555/api/v1/authcode?authcode=127803"
+curl -i -H 'x-auth-token: xxx' -X DELETE "http://127.0.0.1:15555/api/v1/authcode?authcode=818361"
 ```
 
 4. list all auth code
 
 ```shell
-curl -i "http://127.0.0.1:15555/api/v1/authcode"
+curl -i -H 'x-auth-token: xxx' "http://127.0.0.1:15555/api/v1/authcode"
 ```
 
 ## Contributing
