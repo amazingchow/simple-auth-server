@@ -8,6 +8,7 @@ sys.path.append(os.path.abspath("../utils"))
 from . import auth_server_blueprint
 from .constant import _auth_code_db_name
 from concurrency_safe_shelve import open_thread_safe_shelf
+from flask import current_app
 from flask import jsonify
 from flask import request
 from flask import Response
@@ -25,6 +26,7 @@ def new_auth_code():
     payload = request.get_json()
     expired_date = payload.get("expired_date", "")
     if not validate_date_format(expired_date):
+        current_app.logger.error("invalid expired_date: {}".format(expired_date))
         return Response(
             "Invalid expired_date",
             status=StatusCode.HTTP_400_BAD_REQUEST,
@@ -48,4 +50,5 @@ def new_auth_code():
         }
 
     response_object = {"auth_code": auth_code, "expired_date": expired_date}
+    current_app.logger.info("generate new auth code: {}, which will be expired at {}".format(auth_code, expired_date))
     return jsonify(response_object)
