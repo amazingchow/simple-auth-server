@@ -18,12 +18,20 @@ from utils import gen_auth_code_hash
 from utils import gen_datetime_range
 from utils import gen_salt
 from utils import validate_date_format
+from utils import validate_email_format
 
 
 # 生成激活码接口
 @auth_server_blueprint.route("/api/v1/authcode", methods=["POST"])
 def new_auth_code():
     payload = request.get_json()
+    user_email = payload.get("user_email", "")
+    if not validate_email_format(user_email):
+        current_app.logger.error("invalid user_email: {}".format(user_email))
+        return Response(
+            "Invalid user_email",
+            status=StatusCode.HTTP_400_BAD_REQUEST,
+        )
     expired_date = payload.get("expired_date", "")
     if not validate_date_format(expired_date):
         current_app.logger.error("invalid expired_date: {}".format(expired_date))
@@ -42,13 +50,19 @@ def new_auth_code():
         salt = gen_salt()
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         datetime_range = gen_datetime_range(today, expired_date)
-        auth_code_hash_list = [gen_auth_code_hash(auth_code, salt, date) for date in datetime_range]
+        auth_code_hash_list = [gen_auth_code_hash(auth_code, salt, user_email, date) for date in datetime_range]
 
         db[auth_code] = {
             "salt": salt,
+            "user_email": user_email,
             "hash_list": auth_code_hash_list,
         }
 
-    response_object = {"auth_code": auth_code, "expired_date": expired_date}
-    current_app.logger.info("generate new auth code: {}, which will be expired at {}".format(auth_code, expired_date))
+    response_object = {
+        "auth_code": auth_code,
+        "user_email": user_email,
+        "expired_date": expired_date,
+    }
+    current_app.logger.info("generate new auth code: {} for {}, which will be expired at {}".format(
+        auth_code, user_email, expired_date))
     return jsonify(response_object)

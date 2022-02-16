@@ -35,8 +35,9 @@ def verify_auth_code():
             )
 
         salt = db[auth_code]["salt"]
+        user_email = db[auth_code]["user_email"]
         today = datetime.datetime.now().strftime("%Y-%m-%d")
-        auth_code_hash = gen_auth_code_hash(auth_code, salt, today)
+        auth_code_hash = gen_auth_code_hash(auth_code, salt, user_email, today)
         auth_code_hash_list = db[auth_code]["hash_list"]
         if auth_code_hash not in auth_code_hash_list:
             current_app.logger.error("invalid auth_code: {}".format(auth_code))

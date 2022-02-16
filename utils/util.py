@@ -2,6 +2,7 @@
 import datetime
 import hashlib
 import random
+import re
 
 
 def gen_auth_code():
@@ -22,9 +23,9 @@ def gen_datetime_range(st_date_str: str, ed_date_str: str):
         yield (st_date + datetime.timedelta(days=i)).strftime("%Y-%m-%d")
 
 
-def gen_auth_code_hash(auth_code: str, salt: str, date: str):
+def gen_auth_code_hash(auth_code: str, salt: str, email: str, date: str):
     h = hashlib.new("sha256")
-    h.update(bytes("{}_{}_{}".format(auth_code, salt, date), encoding="utf-8"))
+    h.update(bytes("{}_{}_{}_{}".format(auth_code, salt, email, date), encoding="utf-8"))
     return h.hexdigest()
 
 
@@ -36,3 +37,12 @@ def validate_date_format(date: str):
         is_valid = False
     finally:
         return is_valid
+
+
+EMAIL_REGEX = re.compile(r"[^@|\s]+@[^@]+\.[^@|\s]+")
+
+def validate_email_format(email: str):
+    is_valid = True
+    if EMAIL_REGEX.match(email) is None:
+        is_valid = False
+    return is_valid
