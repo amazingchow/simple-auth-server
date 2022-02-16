@@ -41,6 +41,7 @@ def validate_date_format(date: str):
 
 EMAIL_REGEX = re.compile(r"[^@|\s]+@[^@]+\.[^@|\s]+")
 
+
 def validate_email_format(email: str):
     is_valid = True
     if EMAIL_REGEX.match(email) is None:

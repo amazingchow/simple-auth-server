@@ -53,8 +53,9 @@ def new_auth_code():
         auth_code_hash_list = [gen_auth_code_hash(auth_code, salt, user_email, date) for date in datetime_range]
 
         db[auth_code] = {
-            "salt": salt,
             "user_email": user_email,
+            "expired_date": expired_date,
+            "salt": salt,
             "hash_list": auth_code_hash_list,
         }
 

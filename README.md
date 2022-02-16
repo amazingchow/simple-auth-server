@@ -53,6 +53,12 @@ curl -I "http://127.0.0.1:15555/api/v1/authcode/verify?authcode=127803"
 curl -X DELETE "http://127.0.0.1:15555/api/v1/authcode?authcode=127803"
 ```
 
+4. list all auth code
+
+```shell
+curl -i "http://127.0.0.1:15555/api/v1/authcode"
+```
+
 ## Contributing
 
 ### Step 1
