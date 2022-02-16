@@ -21,7 +21,7 @@ from utils import validate_date_format
 
 
 # 生成激活码接口
-@auth_server_blueprint.route("/api/v1/authcode/new", methods=["POST"])
+@auth_server_blueprint.route("/api/v1/authcode", methods=["POST"])
 def new_auth_code():
     payload = request.get_json()
     expired_date = payload.get("expired_date", "")
